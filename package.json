@@ -1,0 +1,44 @@
+{
+  "name": "max-page-loader",
+  "version": "0.0.1",
+  "description": "This tool saves target pages. Default location for saved page is in the directory where script was called",
+  "main": "dist/index.js",
+  "bin": {
+    "page-loader": "dist/bin/page-loader.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "babel-node": "babel-node",
+    "eslint": "eslint",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximtop/project-lvl3-s19.git"
+  },
+  "author": "Maxim Topciu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maximtop/project-lvl3-s19/issues"
+  },
+  "homepage": "https://github.com/maximtop/project-lvl3-s19#readme",
+  "devDependencies": {
+    "babel-cli": "*",
+    "babel-core": "*",
+    "babel-eslint": "*",
+    "babel-plugin-transform-runtime": "*",
+    "babel-preset-env": "*",
+    "babel-preset-flow": "*",
+    "babel-preset-stage-0": "*",
+    "debug": "*",
+    "eslint": "*",
+    "eslint-config-airbnb-base": "*",
+    "eslint-plugin-flowtype": "*",
+    "eslint-plugin-import": "*",
+    "jest": "^18"
+  },
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}
