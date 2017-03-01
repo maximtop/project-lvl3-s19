@@ -10,6 +10,20 @@ const getFileNameFromUrl = (link) => {
   return `${[hostname, pathname].join('').replace(regex, '-')}.html`;
 };
 
+export default async (pageURL, pathToSave = './') => {
+  try {
+    const fileName = getFileNameFromUrl(pageURL);
+    const response = await axios.get(pageURL);
+    await fs.writeFile(path.join(pathToSave, fileName), response.data);
+    return Promise.resolve('page was downloaded');
+  } catch (e) {
+    if (e.response.status === 404) {
+      return Promise.reject('Page not found');
+    }
+    return Promise.reject(e);
+  }
+};
+
 // export default (pageUrl, pathToSave = './') => {
 //   const fileName = getFileNameFromUrl(pageUrl);
 //   axios.get(pageUrl)
@@ -20,14 +34,3 @@ const getFileNameFromUrl = (link) => {
 //       console.log(err);
 //     });
 // };
-
-export default async (pageURL, pathToSave = './') => {
-  try {
-    const fileName = getFileNameFromUrl(pageURL);
-    const response = await axios.get(pageURL);
-    await fs.writeFile(path.join(pathToSave, fileName), response.data);
-    return Promise.resolve('page was downloaded');
-  } catch (e) {
-    return Promise.reject(e);
-  }
-};

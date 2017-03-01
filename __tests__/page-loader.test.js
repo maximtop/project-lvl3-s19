@@ -19,6 +19,9 @@ describe('Test page-loader function', () => {
       .get('/test')
       .reply(200, 'test data');
     tempDir = fs.mkdtempSync(`${os.tmpdir()}/`);
+    nock(host)
+      .get('/no-such-page')
+      .reply(404, 'no such page');
   });
   afterEach(() => {
     fse.removeSync(tempDir);
