@@ -9,7 +9,7 @@ program
   .description(pjson.description)
   .arguments('<pageUri>')
   .option('-o, --output [path]', 'Output path')
-  .action((pageUri) => {
-    console.log(pageLoader(pageUri, program.output));
+  .action((pageUrl) => {
+    console.log(pageLoader(pageUrl, program.output));
   })
   .parse(process.argv);

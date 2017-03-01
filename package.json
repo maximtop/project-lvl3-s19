@@ -36,9 +36,13 @@
     "eslint-config-airbnb-base": "*",
     "eslint-plugin-flowtype": "*",
     "eslint-plugin-import": "*",
-    "jest": "^18"
+    "jest": "^18",
+    "nock": "^9.0.8"
   },
   "dependencies": {
-    "commander": "^2.9.0"
+    "axios": "^0.15.3",
+    "commander": "^2.9.0",
+    "fs-extra": "^2.0.0",
+    "mz": "^2.6.0"
   }
 }
