@@ -10,6 +10,6 @@ program
   .arguments('<pageUri>')
   .option('-o, --output [path]', 'Output path')
   .action((pageUrl) => {
-    console.log(pageLoader(pageUrl, program.output));
+    pageLoader(pageUrl, program.output).then(msg => console.log(msg));
   })
   .parse(process.argv);

@@ -10,13 +10,24 @@ const getFileNameFromUrl = (link) => {
   return `${[hostname, pathname].join('').replace(regex, '-')}.html`;
 };
 
-export default (pageUrl, pathToSave = './') => {
-  const fileName = getFileNameFromUrl(pageUrl);
-  axios.get(pageUrl)
-    .then((res) => {
-      fs.writeFile(path.join(pathToSave, fileName), res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+// export default (pageUrl, pathToSave = './') => {
+//   const fileName = getFileNameFromUrl(pageUrl);
+//   axios.get(pageUrl)
+//     .then((response) => {
+//       fs.writeFile(path.join(pathToSave, fileName), response.data);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// };
+
+export default async (pageURL, pathToSave = './') => {
+  try {
+    const fileName = getFileNameFromUrl(pageURL);
+    const response = await axios.get(pageURL);
+    await fs.writeFile(path.join(pathToSave, fileName), response.data);
+    return Promise.resolve('page was downloaded');
+  } catch (e) {
+    return Promise.reject(e);
+  }
 };
