@@ -1,5 +1,3 @@
-import axios from 'axios';
-import httpAdapter from 'axios/lib/adapters/http';
 import nock from 'nock';
 import fs from 'mz/fs';
 import fse from 'fs-extra';
@@ -31,5 +29,12 @@ describe('Test page-loader function', () => {
     await pageLoader('http://localhost/test', path.resolve(tempDir));
     const actualData = await fs.readFile(path.join(tempDir, './localhost-test.html'), 'UTF-8');
     expect(actualData).toBe('test data');
+  });
+  test('Test page with error 404', async () => {
+    try {
+      await pageLoader('http://localhost/no-such-page', path.resolve(tempDir));
+    } catch (e) {
+      expect(e).toBe('Page not found');
+    }
   });
 });
