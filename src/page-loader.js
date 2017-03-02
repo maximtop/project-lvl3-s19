@@ -1,21 +1,22 @@
-import axios from 'axios';
 import fs from 'mz/fs';
 import url from 'url';
 import path from 'path';
+import axios from './lib/axios';
 
-const getFileNameFromUrl = (link) => {
+const getFileNameFromUrl = (link, extname) => {
   const regex = /\W/g;
   const urlObject = url.parse(link);
   const { hostname, pathname } = urlObject;
-  return `${[hostname, pathname].join('').replace(regex, '-')}.html`;
+  return `${[hostname, pathname].join('').replace(regex, '-')}${extname}`;
 };
 
-export default async (pageURL, pathToSave = './') => {
+export default async (pageURL, pathToSave = path.sep) => {
   try {
-    const fileName = getFileNameFromUrl(pageURL);
+    const fileName = getFileNameFromUrl(pageURL, '.html');
     const response = await axios.get(pageURL);
+    console.log(path.join(pathToSave, fileName));
     await fs.writeFile(path.join(pathToSave, fileName), response.data);
-    return Promise.resolve('page was downloaded');
+    return 'page was downloaded';
   } catch (e) {
     if (e.response.status === 404) {
       return Promise.reject('Page not found');
