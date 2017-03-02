@@ -1,5 +1,3 @@
-// import axios from 'axios';
-// import httpAdapter from 'axios/lib/adapters/http';
 import nock from 'nock';
 import fs from 'mz/fs';
 import fse from 'fs-extra';
