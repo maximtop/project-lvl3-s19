@@ -1,7 +1,7 @@
-import axios from 'axios';
 import fs from 'mz/fs';
 import url from 'url';
 import path from 'path';
+import axios from './lib/axios';
 
 const getFileNameFromUrl = (link) => {
   const regex = /\W/g;
@@ -23,14 +23,3 @@ export default async (pageURL, pathToSave = './') => {
     return Promise.reject(e);
   }
 };
-
-// export default (pageUrl, pathToSave = './') => {
-//   const fileName = getFileNameFromUrl(pageUrl);
-//   axios.get(pageUrl)
-//     .then((response) => {
-//       fs.writeFile(path.join(pathToSave, fileName), response.data);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
