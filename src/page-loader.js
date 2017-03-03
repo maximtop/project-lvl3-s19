@@ -3,7 +3,7 @@ import url from 'url';
 import path from 'path';
 import cheerio from 'cheerio';
 import os from 'os';
-import fse from 'fs-extra';
+import ncp from 'ncp';
 import axios from './lib/axios';
 
 const getNameFromUrl = (link, extname) => {
@@ -61,12 +61,9 @@ export default async (pageURL, pathToSave = '.') => {
       await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
     }
     await fs.writeFile(path.join(tmpDir, fileName), response.data);
-    console.log(tmpDir);
-    console.log(path.resolve(pathToSave));
-    await fse.move(tmpDir, path.resolve(pathToSave), true);
+    await ncp(tmpDir, pathToSave);
     return 'page was downloaded';
   } catch (e) {
-    console.log(e);
     if (e.response.status === 404) {
       return Promise.reject(`Page response code was: ${e.response.status}`);
     }

@@ -18,16 +18,16 @@ describe('Test page-loader function', () => {
       .get('/no-such-page')
       .reply(404, 'no such page');
   });
-  afterEach(() => {
-    fse.removeSync(tempDir);
-  });
+  // afterEach(() => {
+  //   fse.removeSync(tempDir);
+  // });
   test('Test that page was downloaded', async () => {
     const message = await pageLoader('http://localhost/test', path.resolve(tempDir));
     expect(message).toBe('page was downloaded');
   });
   test('Test that saved page has same data', async () => {
     await pageLoader('http://localhost/test', path.resolve(tempDir));
-    const actualData = await fs.readFile(path.join(tempDir, './localhost-test.html'), 'UTF-8');
+    const actualData = await fs.readFile(path.join(tempDir, 'localhost-test.html'), 'UTF-8');
     expect(actualData).toBe('test data');
   });
   test('Test page with error 404', async () => {
