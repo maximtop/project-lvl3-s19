@@ -43,9 +43,9 @@ const loadSource = async (srcUrl, srcPath) => {
     await fs.writeFile(path.join(srcPath, fileName), response.data);
   } catch (e) {
     if (e.response && e.response.status !== 200) {
-      return Promise.reject(`We can't download page because one of inner sources ${srcUrl} returned response code: ${e.response.status}`);
+      Promise.reject(`We can't download page because one of inner sources ${srcUrl} returned response code: ${e.response.status}`);
     }
-    return Promise.reject(e);
+    Promise.reject(e);
   }
 };
 
