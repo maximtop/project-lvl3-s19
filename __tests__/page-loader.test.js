@@ -19,7 +19,7 @@ describe('Test page-loader function', () => {
   });
   test('Test that page was downloaded', async () => {
     const message = await pageLoader('http://localhost/test', tempDir);
-    expect(message).toBe('page was downloaded');
+    expect(message).toBe(`Page http://localhost/test was downloaded in directory ${tempDir}`);
   });
   test('Test that saved page has same data', async () => {
     await pageLoader('http://localhost/test', tempDir);
@@ -28,9 +28,16 @@ describe('Test page-loader function', () => {
   });
   test('Test page with error 404', async () => {
     try {
-      await pageLoader('http://localhost/no-such-page', path.resolve(tempDir));
+      await pageLoader('http://localhost/no-such-page', tempDir);
     } catch (e) {
-      expect(e).toBe('Page response code was: 404');
+      expect(e).toBe('Page http://localhost/no-such-page can\'t be downloaded. Response code returned: 404');
+    }
+  });
+  test('Test unavailable directory', async () => {
+    try {
+      await pageLoader('http://localhost/test', '/IMPOSIBLE-DIRECTORY/TEST');
+    } catch (e) {
+      expect(e).toBe('We can\'t save http://localhost/test because there is no such directory /IMPOSIBLE-DIRECTORY/TEST');
     }
   });
 });

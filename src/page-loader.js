@@ -41,13 +41,19 @@ const loadSource = async (srcUrl, srcPath) => {
     const fileName = getNameFromUrl(srcUrl);
     const response = await axios.get(srcUrl, { responseType: 'arraybuffer' });
     await fs.writeFile(path.join(srcPath, fileName), response.data);
-    return `source was downloaded: ${fileName}`;
+    return `Source was downloaded: ${fileName}`;
   } catch (e) {
+    if (e.response && e.response.status !== 200) {
+      return Promise.reject(`Data from link ${srcUrl} can't be downloaded. Response code returned: ${e.response.status}`);
+    }
     return Promise.reject(e);
   }
 };
 
 export default async (pageURL, pathToSave = '.') => {
+  if (!await fs.exists(pathToSave)) {
+    return Promise.reject(`We can't save ${pageURL} because there is no such directory ${pathToSave}`);
+  }
   try {
     const tmpDir = await fs.mkdtemp(`${os.tmpdir()}/`);
     const fileName = getNameFromUrl(pageURL, '.html');
@@ -62,14 +68,15 @@ export default async (pageURL, pathToSave = '.') => {
       }
       response.data = links.reduce((acc, link) =>
         acc.replace(link, `${filesDir}${path.sep}${getNameFromUrl(link)}`), html);
-      await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
+      const linkErrors = await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
+      return Promise.reject(linkErrors);
     }
     await fs.writeFile(path.join(tmpDir, fileName), response.data);
     await copyFiles(tmpDir, pathToSave);
-    return 'page was downloaded';
+    return `Page ${pageURL} was downloaded in directory ${pathToSave}`;
   } catch (e) {
-    if (e.response.status === 404) {
-      return Promise.reject(`Page response code was: ${e.response.status}`);
+    if (e.response && e.response.status !== 200) {
+      return Promise.reject(`Page ${pageURL} can't be downloaded. Response code returned: ${e.response.status}`);
     }
     return Promise.reject(e);
   }
