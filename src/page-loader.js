@@ -41,10 +41,9 @@ const loadSource = async (srcUrl, srcPath) => {
     const fileName = getNameFromUrl(srcUrl);
     const response = await axios.get(srcUrl, { responseType: 'arraybuffer' });
     await fs.writeFile(path.join(srcPath, fileName), response.data);
-    return `Source was downloaded: ${fileName}`;
   } catch (e) {
     if (e.response && e.response.status !== 200) {
-      return Promise.reject(`Data from link ${srcUrl} can't be downloaded. Response code returned: ${e.response.status}`);
+      return Promise.reject(`We can't download page because one of inner sources ${srcUrl} returned response code: ${e.response.status}`);
     }
     return Promise.reject(e);
   }
@@ -68,8 +67,7 @@ export default async (pageURL, pathToSave = '.') => {
       }
       response.data = links.reduce((acc, link) =>
         acc.replace(link, `${filesDir}${path.sep}${getNameFromUrl(link)}`), html);
-      const linkErrors = await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
-      return Promise.reject(linkErrors);
+      await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
     }
     await fs.writeFile(path.join(tmpDir, fileName), response.data);
     await copyFiles(tmpDir, pathToSave);
