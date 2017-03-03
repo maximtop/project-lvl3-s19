@@ -24,6 +24,11 @@ const formatLink = (srcLink, mainLink) => {
   return hostname === null ? url.format({ protocol, host, pathname: srcLink }) : srcLink;
 };
 
+const copyFiles = async (source, destination) =>
+  new Promise((resolve, reject) => {
+    ncp(source, destination, error => (error ? reject(error) : resolve()));
+  });
+
 const parseLinks = (data) => {
   const $ = cheerio.load(data);
   const linksFromLinkTags = $('link').map((index, el) => $(el).attr('href')).get();
@@ -52,7 +57,6 @@ export default async (pageURL, pathToSave = '.') => {
     if (links.length > 0) {
       const filesDir = getNameFromUrl(pageURL, '_files');
       const tmpFilesDir = path.join(tmpDir, filesDir);
-      console.log(tmpFilesDir);
       if (!await fs.exists(tmpFilesDir)) {
         await fs.mkdir(tmpFilesDir);
       }
@@ -61,7 +65,7 @@ export default async (pageURL, pathToSave = '.') => {
       await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
     }
     await fs.writeFile(path.join(tmpDir, fileName), response.data);
-    await ncp(tmpDir, pathToSave);
+    await copyFiles(tmpDir, pathToSave);
     return 'page was downloaded';
   } catch (e) {
     if (e.response.status === 404) {
