@@ -34,7 +34,7 @@ describe('Test page-loader function', () => {
     try {
       await pageLoader('http://localhost/no-such-page', path.resolve(tempDir));
     } catch (e) {
-      expect(e).toBe('Page not found');
+      expect(e).toBe('Page response code was: 404');
     }
   });
 });

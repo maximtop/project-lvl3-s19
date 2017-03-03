@@ -2,6 +2,8 @@ import fs from 'mz/fs';
 import url from 'url';
 import path from 'path';
 import cheerio from 'cheerio';
+import os from 'os';
+import fse from 'fs-extra';
 import axios from './lib/axios';
 
 const getNameFromUrl = (link, extname) => {
@@ -16,6 +18,12 @@ const getNameFromUrl = (link, extname) => {
   return formattedLink.replace(sourceRegex, '.');
 };
 
+const formatLink = (srcLink, mainLink) => {
+  const { protocol, host } = url.parse(mainLink);
+  const { hostname } = url.parse(srcLink);
+  return hostname === null ? url.format({ protocol, host, pathname: srcLink }) : srcLink;
+};
+
 const parseLinks = (data) => {
   const $ = cheerio.load(data);
   const linksFromLinkTags = $('link').map((index, el) => $(el).attr('href')).get();
@@ -28,7 +36,7 @@ const loadSource = async (srcUrl, srcPath) => {
     const fileName = getNameFromUrl(srcUrl);
     const response = await axios.get(srcUrl, { responseType: 'arraybuffer' });
     await fs.writeFile(path.join(srcPath, fileName), response.data);
-    return 'all sources were downloaded';
+    return `source was downloaded: ${fileName}`;
   } catch (e) {
     return Promise.reject(e);
   }
@@ -36,24 +44,31 @@ const loadSource = async (srcUrl, srcPath) => {
 
 export default async (pageURL, pathToSave = '.') => {
   try {
+    const tmpDir = await fs.mkdtemp(`${os.tmpdir()}/`);
     const fileName = getNameFromUrl(pageURL, '.html');
     const response = await axios.get(pageURL, { responseType: 'string' });
     const html = response.data;
-    const links = parseLinks(html);
+    const links = parseLinks(html).map(link => formatLink(link, pageURL));
     if (links.length > 0) {
-      const dirName = getNameFromUrl(pageURL, '_files');
-      if (!fs.existsSync(dirName)) {
-        fs.mkdirSync(dirName);
+      const filesDir = getNameFromUrl(pageURL, '_files');
+      const tmpFilesDir = path.join(tmpDir, filesDir);
+      console.log(tmpFilesDir);
+      if (!await fs.exists(tmpFilesDir)) {
+        await fs.mkdir(tmpFilesDir);
       }
       response.data = links.reduce((acc, link) =>
-        acc.replace(link, `${dirName}${path.sep}${getNameFromUrl(link)}`), html);
-      await Promise.all(links.map(link => loadSource(link, dirName)));
+        acc.replace(link, `${filesDir}${path.sep}${getNameFromUrl(link)}`), html);
+      await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
     }
-    await fs.writeFile(path.join(pathToSave, fileName), response.data);
+    await fs.writeFile(path.join(tmpDir, fileName), response.data);
+    console.log(tmpDir);
+    console.log(path.resolve(pathToSave));
+    await fse.move(tmpDir, path.resolve(pathToSave), true);
     return 'page was downloaded';
   } catch (e) {
+    console.log(e);
     if (e.response.status === 404) {
-      return Promise.reject('Page not found');
+      return Promise.reject(`Page response code was: ${e.response.status}`);
     }
     return Promise.reject(e);
   }
