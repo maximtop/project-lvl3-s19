@@ -1,7 +1,7 @@
 install: install-deps
 
 run:
-	npm run babel-node -- 'src/bin/page-loader.js' https://hexlet.io/courses
+	npm run babel-node -- 'src/bin/page-loader.js' http://allstroi.com
 
 install-deps:
 	yarn
