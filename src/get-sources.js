@@ -34,7 +34,7 @@ const loadSource = async (srcUrl, destPath, spinnerID, spinners) => {
     const fileName = getNameFromUrl(srcUrl);
     const response = await axios.get(srcUrl, { responseType: 'arraybuffer' });
     spinners.success(spinnerID);
-    fs.writeFile(path.join(destPath, fileName), response.data);
+    return fs.writeFile(path.join(destPath, fileName), response.data);
   } catch (e) {
     spinners.error(spinnerID);
     if (e.response && e.response.status !== 200) {
