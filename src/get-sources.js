@@ -33,18 +33,22 @@ const loadSource = async (srcUrl, destPath, spinnerID, spinners) => {
   try {
     const fileName = getNameFromUrl(srcUrl);
     const response = await axios.get(srcUrl, { responseType: 'arraybuffer' });
-    fs.writeFile(path.join(destPath, fileName), response.data);
     spinners.success(spinnerID);
+    fs.writeFile(path.join(destPath, fileName), response.data);
   } catch (e) {
-    if (e.response && e.response.status !== 200) {
-      Promise.reject(`We can't download page because one of inner sources ${srcUrl} returned response code: ${e.response.status}`);
-    }
-    Promise.reject(e);
     spinners.error(spinnerID);
+    if (e.response && e.response.status !== 200) {
+      return `We can't download page because one of inner sources ${srcUrl} returned response code: ${e.response.status}`;
+    }
+    return `Occurred error ${e.message} with page ${srcUrl}`;
   }
 };
 
 export default async (links, destPath) => {
-  const spinners = new Multispinner(links, opts);
-  await Promise.all(links.map(link => loadSource(link, destPath, link, spinners)));
+  try {
+    const spinners = new Multispinner(links, opts);
+    return await Promise.all(links.map(link => loadSource(link, destPath, link, spinners)));
+  } catch (e) {
+    return Promise.reject(e);
+  }
 };
