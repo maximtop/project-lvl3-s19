@@ -5,18 +5,8 @@ import cheerio from 'cheerio';
 import os from 'os';
 import ncp from 'ncp';
 import axios from './lib/axios';
-
-const getNameFromUrl = (link, extname) => {
-  const regex = /\W/g; // search all non-character symbols in links
-  const sourceRegex = /-(?=[^-]*$)/; // search last '-' in the renamed link
-  const urlObject = url.parse(link);
-  const { hostname, pathname } = urlObject;
-  const formattedLink = [hostname, pathname].join('').replace(regex, '-');
-  if (extname) {
-    return `${formattedLink}${extname}`;
-  }
-  return formattedLink.replace(sourceRegex, '.');
-};
+import getSources from './get-sources';
+import getNameFromUrl from './get-name';
 
 const formatLink = (srcLink, mainLink) => {
   const { protocol, host } = url.parse(mainLink);
@@ -34,19 +24,6 @@ const parseLinks = (data) => {
   const linksFromLinkTags = $('link').map((index, el) => $(el).attr('href')).get();
   const linksFromScriptTags = $('script').map((index, el) => $(el).attr('src')).get();
   return [...linksFromLinkTags, ...linksFromScriptTags];
-};
-
-const loadSource = async (srcUrl, srcPath) => {
-  try {
-    const fileName = getNameFromUrl(srcUrl);
-    const response = await axios.get(srcUrl, { responseType: 'arraybuffer' });
-    await fs.writeFile(path.join(srcPath, fileName), response.data);
-  } catch (e) {
-    if (e.response && e.response.status !== 200) {
-      Promise.reject(`We can't download page because one of inner sources ${srcUrl} returned response code: ${e.response.status}`);
-    }
-    Promise.reject(e);
-  }
 };
 
 export default async (pageURL, pathToSave = '.') => {
@@ -67,7 +44,7 @@ export default async (pageURL, pathToSave = '.') => {
       }
       response.data = links.reduce((acc, link) =>
         acc.replace(link, `${filesDir}${path.sep}${getNameFromUrl(link)}`), html);
-      await Promise.all(links.map(link => loadSource(link, tmpFilesDir)));
+      await getSources(links, tmpFilesDir);
     }
     await fs.writeFile(path.join(tmpDir, fileName), response.data);
     await copyFiles(tmpDir, pathToSave);
