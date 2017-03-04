@@ -43,6 +43,8 @@
     "axios": "^0.15.3",
     "cheerio": "^0.22.0",
     "commander": "^2.9.0",
+    "figures": "^2.0.0",
+    "multispinner": "^0.2.1",
     "mz": "^2.6.0",
     "ncp": "^2.0.0"
   }

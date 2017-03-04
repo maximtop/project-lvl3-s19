@@ -1,0 +1,13 @@
+a,.pagination>li>a,.pagination>li>span{color:#27ae60}
+a:hover,.pagination>li>a:hover,.pagination>li>span:hover,.total_wrapper i.fa-circle{color:#333}
+.container,.container-fluid,footer,.dd_cart_wrapper{border-top:4px solid #27ae60}
+.navbar-inverse,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus,#vmCartModule,.moduletable>h3{background:#27ae60}
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > span, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > span:hover,.moduletable.color>h3,.bottom-b,.bottom-b .moduletable>h3,.bottom-b .border{background:#333}
+.moduletable.underline>h3,.ask-a-question-view h1,.manufacturer-details-view h1,.product-related-products>h4,.product-related-categories>h4,.userfields_info{border-bottom:2px solid #27ae60}
+.dropdown-menu.big,.big .flyout-menu{border-top:3px solid #333}
+.border-bottom,.vt-title,.productdetails-view h1,.featured-view h4,.latest-view h4,.topten-view h4,.recent-view h4,.related-products-view h4,.category-view h4,.vt-cat-h,.item-page>h2:first-child,.category-list>h1,.blog-featured>.row h1,.categories-list>h1,.archive>h1,.blog-featured>h1,.contact-category>h2,.contact>h2,.weblink-category>h1,.newsfeed-category>h2,.registration legend{border-bottom:3px solid #27ae60}
+.btn-default{background-color:#333;border-color:#333 #333 #000;color:#FFF}
+.bottom-b ul>li{border-bottom:1px solid #444;padding:5px 5px 5px 0}
+.flyout-menu > .active > a, .flyout-menu > .active > a:hover, .flyout-menu > .active > a:focus, .flyout-menu > .active > span, .flyout-menu > .active > span:hover, .flyout-menu > .active > span:focus {
+  background-color: #27ae60;
+}

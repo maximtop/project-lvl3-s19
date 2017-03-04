@@ -1,0 +1,115 @@
+@CHARSET "UTF-8";
+
+/*Hides the price message of VM for plugins - http://forum.virtuemart.net/index.php?topic=117758.msg398208#msg398208*/
+.price-plugin {
+	display: none;
+}
+
+.cf4all_buttons input[type=radio],
+.cf4all_buttons input[type=checkbox],
+.cf4all_color_buttons input[type=radio],
+.cf4all_color_buttons input[type=checkbox]{	
+	display: none;
+}
+
+/*This code is the same for buttons and color buttons*/
+.cf4all_button {
+	background-image: none !important;	
+	line-height: 1em;
+	display: inline-block;
+	cursor: pointer;
+	font-weight: 500;
+	border: 1px solid #474949;
+	border-radius: 3px;
+	margin-left: 3px;
+	margin-top: 3px;
+}
+
+/*For non-colored buttons*/
+.cf4all_no_color_btn {
+	height: 1em;
+	background-color: #efefef;
+	color: #555555;
+	padding: 5px 9px;
+}
+
+/* Active buttons */
+.cf4all_buttons input[type="radio"]:checked+label,
+.cf4all_buttons input[type="checkbox"]:checked+label,
+.cf4all_color_buttons input[type="radio"]:checked+label,
+.cf4all_color_buttons input[type="checkbox"]:checked+label
+	{
+	border: 2px solid #555555 !important;
+	box-shadow: 0 0 4px rgba(10, 10, 10, 0.5);
+	color: #474949;
+}
+
+.cf4all_wrapper input[type="radio"],.cf4all_wrapper input[type="checkbox"]
+	{
+	position: static !important;
+}
+
+
+.cf4all_wrapper .radio.inline,.cf4all_wrapper .checkbox.inline {
+	display: inline-block;
+	min-height: 20px;
+	vertical-align: middle;
+	height: 1em;
+}
+
+.cf4all_color_btn {
+	margin-left:5px;
+	display:inline-block;
+	width:35px;		
+}
+
+/*static*/
+.inline-control-group{
+	display:inline-block !important;
+}
+
+.cf4all_customvalues_wrapper .cf4all_color_btn{
+	border:1px solid #555555;
+}
+
+/*Colors are included within the color wrapper*/
+.cf4all_inner_value {
+	float: left;
+	padding: 5px 0px;
+}
+
+
+.cf4all_color_btn_small{
+	width: 28px;
+	overflow:hidden;
+	border:1px solid #555555;
+}
+
+.cf4all_color_btn_small .cf4all_inner_value {
+	height: 0.5em;
+}
+
+
+.cf4all_color_btn_medium{
+	width: 30px;
+	overflow:hidden;
+}
+
+.cf4all_color_btn_medium .cf4all_inner_value{	
+	height:1em;	
+}
+
+.cf4all_color_btn_large {
+	width: 36px;
+	line-height: 1.5em;
+}
+
+.cf4all_color_btn_large .cf4all_inner_value{	
+	height:1.5em;	
+}
+
+.cf4all_error_msg{
+	color:#ff0000;
+	clear:both;
+	width:100%;
+}
